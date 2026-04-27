@@ -15,9 +15,8 @@
     "db:push": "turbo -F @wikiora/db db:push",
     "db:studio": "turbo -F @wikiora/db db:studio",
     "db:generate": "turbo -F @wikiora/db db:generate",
-    "db:migrate": "turbo -F @wikiora/db db:migrate",
-    "deploy": "turbo -F @wikiora/infra deploy",
-    "destroy": "turbo -F @wikiora/infra destroy"
+    "db:migrate": "turbo -F @wikiora/db db:migrate"
+
   },
   "dependencies": {
     "@wikiora/env": "workspace:*",

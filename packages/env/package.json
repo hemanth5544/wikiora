@@ -15,7 +15,6 @@
   "devDependencies": {
     "@types/bun": "catalog:",
     "@wikiora/config": "workspace:*",
-    "@wikiora/infra": "workspace:*",
     "typescript": "catalog:"
   }
 }
