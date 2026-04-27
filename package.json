@@ -1,0 +1,35 @@
+{
+  "name": "wikiora",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @wikiora/db db:push",
+    "db:studio": "turbo -F @wikiora/db db:studio",
+    "db:generate": "turbo -F @wikiora/db db:generate",
+    "db:migrate": "turbo -F @wikiora/db db:migrate",
+    "deploy": "turbo -F @wikiora/infra deploy",
+    "destroy": "turbo -F @wikiora/infra destroy"
+  },
+  "dependencies": {
+    "@wikiora/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251213.0",
+    "@types/bun": "catalog:",
+    "@wikiora/config": "workspace:*",
+    "turbo": "^2.8.12",
+    "typescript": "catalog:"
+  },
+  "packageManager": "pnpm@10.26.1"
+}

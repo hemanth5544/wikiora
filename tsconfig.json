@@ -1,0 +1,3 @@
+{
+  "extends": "@wikiora/config/tsconfig.base.json"
+}
