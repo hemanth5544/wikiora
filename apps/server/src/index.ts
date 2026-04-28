@@ -6,8 +6,9 @@ import { auth } from "@wikiora/auth";
 import { env } from "@wikiora/env/server";
 import { Elysia } from "elysia";
 
-const app = new Elysia()
-  .use(
+new Elysia()
+
+.use(
     cors({
       origin: env.CORS_ORIGIN,
       methods: ["GET", "POST", "OPTIONS"],
