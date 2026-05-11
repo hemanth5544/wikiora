@@ -1,0 +1,198 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource/geist-mono/400.css";
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --color-background: var(--canvas);
+  --color-foreground: var(--ink);
+  --color-card: var(--canvas-card);
+  --color-card-foreground: var(--ink);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--on-primary);
+  --color-secondary: var(--canvas-soft);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--canvas-soft);
+  --color-muted-foreground: var(--body-mid);
+  --color-accent: var(--canvas-soft);
+  --color-accent-foreground: var(--ink);
+  --color-border: var(--hairline);
+  --color-input: var(--hairline);
+  --color-ring: var(--ink);
+  --color-canvas: var(--canvas);
+  --color-canvas-soft: var(--canvas-soft);
+  --color-canvas-card: var(--canvas-card);
+  --color-canvas-mid: var(--canvas-mid);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-body-mid: var(--body-mid);
+  --color-accent-sunset: #ff7a17;
+  --color-accent-dusk: #7c3aed;
+  --color-accent-twilight: #c4b5fd;
+  --color-accent-breeze: #a0c3ec;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+}
+
+:root {
+  --canvas: #fafaf7;
+  --canvas-soft: #f1f1ef;
+  --canvas-card: #f4f4f2;
+  --canvas-mid: #e8e8e4;
+  --hairline: #e4e4df;
+  --ink: #0a0a0a;
+  --body: #4b4f56;
+  --body-mid: #7d8187;
+  --primary: #0a0a0a;
+  --on-primary: #fafaf7;
+  --outline-border: rgba(10, 10, 10, 0.18);
+}
+
+.dark {
+  --canvas: #0a0a0a;
+  --canvas-soft: #1a1c20;
+  --canvas-card: #191919;
+  --canvas-mid: #363a3f;
+  --hairline: #212327;
+  --ink: #ffffff;
+  --body: #dadbdf;
+  --body-mid: #7d8187;
+  --primary: #ffffff;
+  --on-primary: #0a0a0a;
+  --outline-border: rgba(255, 255, 255, 0.25);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-background font-sans text-foreground antialiased;
+    font-weight: 400;
+    font-feature-settings: "liga" 1, "calt" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+}
+
+@layer utilities {
+  .type-display-xl {
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    font-weight: 400;
+  }
+
+  .type-display-lg {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    font-weight: 400;
+  }
+
+  .type-display-md {
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+  }
+
+  .type-display-sm {
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+
+  .type-display-xs {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  .type-body-lg {
+    font-size: 1.125rem;
+    line-height: 1.55;
+    font-weight: 400;
+  }
+
+  .type-body-md {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .type-body-sm {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    font-weight: 400;
+  }
+
+  .type-caption-mono {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .type-caption-mono-sm {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .type-button-md {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .surface-pill {
+    border: 1px solid var(--outline-border);
+    border-radius: var(--radius-pill);
+  }
+
+  .surface-card {
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    background: var(--canvas-card);
+  }
+
+  .container-app {
+    @apply mx-auto w-full max-w-[1200px] px-6 md:px-8;
+  }
+
+  .section-band {
+    @apply mx-auto w-full max-w-[1200px] px-6 py-12 md:px-8 md:py-16;
+  }
+}
