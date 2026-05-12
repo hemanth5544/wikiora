@@ -10,6 +10,11 @@ Collaborative query posting and resolution platform for organizations, teams, an
 
 ## Quick start
 
+##Arch
+
+<img width="910" height="480" alt="image" src="https://github.com/user-attachments/assets/957caf0c-2229-456d-b935-04bacbb64886" />
+
+
 1. Copy environment files:
 
 ```bash
