@@ -9,9 +9,12 @@ const LandingPage = lazy(() => import("@/pages/LandingPage"))
 const SignInPage = lazy(() => import("@/pages/SignInPage"))
 const SignUpPage = lazy(() => import("@/pages/SignUpPage"))
 const DashboardPage = lazy(() => import("@/pages/DashboardPage"))
+const WorkspacesPage = lazy(() => import("@/pages/WorkspacesPage"))
 const QueriesPage = lazy(() => import("@/pages/QueriesPage"))
 const NotificationsPage = lazy(() => import("@/pages/NotificationsPage"))
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"))
+const AcceptInvitePage = lazy(() => import("@/pages/AcceptInvitePage"))
+const WorkspaceDetailPage = lazy(() => import("@/pages/WorkspaceDetailPage"))
 
 function RouteFallback() {
   return (
@@ -33,6 +36,9 @@ export function AppRoutes() {
         <Route element={<ProtectedRoute />}>
           <Route path="/app" element={<AppLayout />}>
             <Route index element={<DashboardPage />} />
+            <Route path="workspaces" element={<WorkspacesPage />} />
+            <Route path="workspaces/:workspaceId" element={<WorkspaceDetailPage />} />
+            <Route path="invites/accept" element={<AcceptInvitePage />} />
             <Route path="queries" element={<QueriesPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="settings" element={<SettingsPage />} />
