@@ -33,6 +33,9 @@ func Load() (*Config, error) {
 	if cfg.ClerkSecretKey == "" {
 		return nil, fmt.Errorf("CLERK_SECRET_KEY is required")
 	}
+	if strings.Contains(cfg.ClerkSecretKey, "your_clerk_secret_key") {
+		return nil, fmt.Errorf("CLERK_SECRET_KEY is still the example placeholder; copy the secret key from your Clerk dashboard into apps/api/.env")
+	}
 
 	return cfg, nil
 }

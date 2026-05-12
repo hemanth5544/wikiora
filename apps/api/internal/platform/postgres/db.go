@@ -25,6 +25,9 @@ func Connect(databaseURL string, appEnv string, log *slog.Logger) (*gorm.DB, err
 		&domain.User{},
 		&domain.Workspace{},
 		&domain.WorkspaceMember{},
+		&domain.WorkspaceInvite{},
+		&domain.Query{},
+		&domain.QueryReply{},
 	); err != nil {
 		return nil, fmt.Errorf("auto migrate: %w", err)
 	}
