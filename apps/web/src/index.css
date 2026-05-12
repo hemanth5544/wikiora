@@ -189,10 +189,26 @@
   }
 
   .container-app {
-    @apply mx-auto w-full max-w-[1200px] px-6 md:px-8;
+    @apply w-full px-4 md:px-6 lg:pl-10 lg:pr-8 xl:pl-14;
   }
 
   .section-band {
-    @apply mx-auto w-full max-w-[1200px] px-6 py-12 md:px-8 md:py-16;
+    @apply w-full px-4 py-10 md:px-6 md:py-12;
+  }
+
+  .diagonal-stripes {
+    --stripe-color: oklch(0.18 0 0 / 42%);
+    --stripe-bg: transparent;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--stripe-bg),
+      var(--stripe-bg) 6px,
+      var(--stripe-color) 6px,
+      var(--stripe-color) 7px
+    );
+  }
+
+  .dark .diagonal-stripes {
+    --stripe-color: oklch(1 0 0 / 28%);
   }
 }

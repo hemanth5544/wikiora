@@ -1,16 +1,14 @@
 import { useAuth } from "@clerk/clerk-react"
 import { Navigate, Outlet, useLocation } from "react-router-dom"
 
+import { SessionLoader } from "@/components/feedback/LoadingState"
+
 export function ProtectedRoute() {
   const { isLoaded, isSignedIn } = useAuth()
   const location = useLocation()
 
   if (!isLoaded) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-        Loading session...
-      </div>
-    )
+    return <SessionLoader />
   }
 
   if (!isSignedIn) {

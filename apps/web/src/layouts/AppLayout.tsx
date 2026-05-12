@@ -7,6 +7,8 @@ import { BrandMark } from "@/components/brand/BrandMark"
 import { AppSidebar } from "@/components/layout/AppSidebar"
 import { UserSyncBridge } from "@/components/UserSyncBridge"
 import { ThemeToggle } from "@/components/ThemeToggle"
+import { NewQueryModal } from "@/features/queries/NewQueryModal"
+import { NewQueryModalProvider } from "@/features/queries/NewQueryModalContext"
 import { cn } from "@/lib/utils"
 
 const mobileNavItems = [
@@ -21,57 +23,60 @@ export function AppLayout() {
   const location = useLocation()
 
   return (
-    <div className="min-h-screen bg-background">
-      <UserSyncBridge />
-      <div className="flex min-h-screen">
-        <AppSidebar />
+    <NewQueryModalProvider>
+      <div className="h-screen overflow-hidden bg-background">
+        <UserSyncBridge />
+        <div className="flex h-full">
+          <AppSidebar />
 
-        <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-sm lg:hidden">
-            <div className="flex items-center justify-between gap-3 px-4 py-3">
-              <BrandMark to="/app" />
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <UserButton afterSignOutUrl="/" />
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+            <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-sm lg:hidden">
+              <div className="flex items-center justify-between gap-3 px-4 py-3">
+                <BrandMark to="/app" />
+                <div className="flex items-center gap-2">
+                  <ThemeToggle />
+                  <UserButton afterSignOutUrl="/" />
+                </div>
               </div>
-            </div>
-            <nav className="flex gap-1 overflow-x-auto px-4 pb-3">
-              {mobileNavItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.end}
-                  className={({ isActive }) =>
-                    cn(
-                      "inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 type-body-sm",
-                      isActive
-                        ? "border-[color:var(--outline-border)] bg-muted text-foreground"
-                        : "border-transparent text-body",
-                    )
-                  }
-                >
-                  <item.icon className="h-4 w-4" aria-hidden />
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
-          </header>
+              <nav className="flex flex-wrap gap-2 px-4 pb-3">
+                {mobileNavItems.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.end}
+                    className={({ isActive }) =>
+                      cn(
+                        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 type-body-sm",
+                        isActive
+                          ? "border-[color:var(--outline-border)] bg-muted text-foreground"
+                          : "border-transparent text-body",
+                      )
+                    }
+                  >
+                    <item.icon className="h-4 w-4" aria-hidden />
+                    {item.label}
+                  </NavLink>
+                ))}
+              </nav>
+            </header>
 
-          <main className="container-app flex-1 py-8 md:py-12">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <Outlet />
-              </motion.div>
-            </AnimatePresence>
-          </main>
+            <main className="container-app min-h-0 flex-1 overflow-y-auto py-6 md:py-8">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={location.pathname}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Outlet />
+                </motion.div>
+              </AnimatePresence>
+            </main>
+          </div>
         </div>
+        <NewQueryModal />
       </div>
-    </div>
+    </NewQueryModalProvider>
   )
 }

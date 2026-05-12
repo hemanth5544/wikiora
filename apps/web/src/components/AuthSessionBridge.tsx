@@ -1,18 +1,24 @@
 import { useAuth } from "@clerk/clerk-react"
 import { useEffect } from "react"
 
-import { setAuthTokenGetter } from "@/services/authToken"
+import { clearAuthTokenGetter, setAuthTokenGetter } from "@/services/authToken"
 
 export function AuthSessionBridge() {
-  const { getToken, isLoaded } = useAuth()
+  const { getToken, isLoaded, isSignedIn } = useAuth()
 
   useEffect(() => {
     if (!isLoaded) {
+      clearAuthTokenGetter()
       return
     }
 
-    setAuthTokenGetter(() => getToken())
-  }, [getToken, isLoaded])
+    if (!isSignedIn) {
+      clearAuthTokenGetter()
+      return
+    }
+
+    setAuthTokenGetter(async () => getToken())
+  }, [getToken, isLoaded, isSignedIn])
 
   return null
 }

@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react"
 
+import { MotionCard } from "@/components/motion/MotionPrimitives"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
@@ -13,7 +14,8 @@ type MetricCardProps = {
 
 export function MetricCard({ label, value, hint, icon: Icon, className }: MetricCardProps) {
   return (
-    <Card className={cn(className)}>
+    <MotionCard>
+      <Card className={cn(className)}>
       <CardHeader className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <CardTitle className="type-body-sm text-body">{label}</CardTitle>
@@ -24,6 +26,7 @@ export function MetricCard({ label, value, hint, icon: Icon, className }: Metric
       <CardContent>
         <p className="type-display-sm text-foreground">{value}</p>
       </CardContent>
-    </Card>
+      </Card>
+    </MotionCard>
   )
 }

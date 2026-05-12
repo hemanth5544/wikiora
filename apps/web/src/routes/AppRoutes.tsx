@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
+import { PageLoader } from "@/components/feedback/LoadingState"
 import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { ProtectedRoute } from "@/routes/ProtectedRoute"
@@ -14,19 +15,13 @@ const QueriesPage = lazy(() => import("@/pages/QueriesPage"))
 const NotificationsPage = lazy(() => import("@/pages/NotificationsPage"))
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"))
 const AcceptInvitePage = lazy(() => import("@/pages/AcceptInvitePage"))
+const QueryDetailPage = lazy(() => import("@/pages/QueryDetailPage"))
 const WorkspaceDetailPage = lazy(() => import("@/pages/WorkspaceDetailPage"))
-
-function RouteFallback() {
-  return (
-    <div className="flex min-h-[40vh] items-center justify-center text-sm text-muted-foreground">
-      Loading page...
-    </div>
-  )
-}
+const WorkspaceManagePage = lazy(() => import("@/pages/WorkspaceManagePage"))
 
 export function AppRoutes() {
   return (
-    <Suspense fallback={<RouteFallback />}>
+    <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route element={<AuthLayout />}>
@@ -37,7 +32,9 @@ export function AppRoutes() {
           <Route path="/app" element={<AppLayout />}>
             <Route index element={<DashboardPage />} />
             <Route path="workspaces" element={<WorkspacesPage />} />
+            <Route path="workspaces/manage" element={<WorkspaceManagePage />} />
             <Route path="workspaces/:workspaceId" element={<WorkspaceDetailPage />} />
+            <Route path="workspaces/:workspaceId/queries/:queryId" element={<QueryDetailPage />} />
             <Route path="invites/accept" element={<AcceptInvitePage />} />
             <Route path="queries" element={<QueriesPage />} />
             <Route path="notifications" element={<NotificationsPage />} />

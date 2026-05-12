@@ -19,7 +19,7 @@ export function PageIntro({ eyebrow, title, description, className, titleSize = 
       <SectionTitle as="h1" size={titleSize}>
         {title}
       </SectionTitle>
-      {description ? <p className="max-w-2xl type-body-lg text-body">{description}</p> : null}
+      {description ? <p className="max-w-3xl type-body-lg text-body">{description}</p> : null}
     </div>
   )
 }

@@ -1,7 +1,9 @@
+import { motion } from "framer-motion"
 import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
+import { motionEase } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -9,13 +11,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "border-primary bg-primary text-primary-foreground hover:opacity-90",
-        outline:
-          "border-[color:var(--outline-border)] bg-transparent text-foreground hover:bg-muted",
+        default: "border-primary bg-primary text-primary-foreground hover:opacity-90",
+        outline: "border-[color:var(--outline-border)] bg-transparent text-foreground hover:bg-muted",
         ghost: "border-transparent bg-transparent text-foreground hover:bg-muted",
-        secondary:
-          "border-[color:var(--outline-border)] bg-secondary text-secondary-foreground hover:bg-muted",
+        secondary: "border-[color:var(--outline-border)] bg-secondary text-secondary-foreground hover:bg-muted",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -39,8 +38,22 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+    const classes = cn(buttonVariants({ variant, size, className }))
+
+    if (asChild) {
+      return <Slot className={classes} ref={ref} {...props} />
+    }
+
+    return (
+      <motion.div
+        className={cn("inline-flex", className?.includes("w-full") && "w-full")}
+        whileHover={{ y: -1 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.18, ease: motionEase }}
+      >
+        <button ref={ref} className={classes} {...props} />
+      </motion.div>
+    )
   },
 )
 Button.displayName = "Button"

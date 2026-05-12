@@ -16,6 +16,6 @@ export const baseApi = createApi({
       return headers
     },
   }),
-  tagTypes: ["User"],
+  tagTypes: ["User", "Workspace", "WorkspaceMember", "WorkspaceInvite", "Query"],
   endpoints: () => ({}),
 })
