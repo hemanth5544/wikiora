@@ -19,7 +19,7 @@ type Config struct {
 func Load() (*Config, error) {
 	cfg := &Config{
 		AppEnv:             getEnv("APP_ENV", "development"),
-		APIPort:            getEnv("API_PORT", "8080"),
+		APIPort:            os.Getenv("API_PORT"),
 		DatabaseURL:        os.Getenv("DATABASE_URL"),
 		RedisURL:           os.Getenv("REDIS_URL"),
 		ClerkSecretKey:     os.Getenv("CLERK_SECRET_KEY"),
