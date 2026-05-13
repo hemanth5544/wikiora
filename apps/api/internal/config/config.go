@@ -19,7 +19,7 @@ type Config struct {
 func Load() (*Config, error) {
 	cfg := &Config{
 		AppEnv:             getEnv("APP_ENV", "development"),
-		APIPort:            os.Getenv("API_PORT"),
+		APIPort:            resolveListenPort(),
 		DatabaseURL:        os.Getenv("DATABASE_URL"),
 		RedisURL:           os.Getenv("REDIS_URL"),
 		ClerkSecretKey:     os.Getenv("CLERK_SECRET_KEY"),
@@ -38,6 +38,15 @@ func Load() (*Config, error) {
 	}
 
 	return cfg, nil
+}
+
+// resolveListenPort returns the HTTP listen port.
+// Vercel, Railway, Render, etc. set PORT; local dev often uses API_PORT or 8080.
+func resolveListenPort() string {
+	if p := strings.TrimSpace(os.Getenv("PORT")); p != "" {
+		return p
+	}
+	return getEnv("API_PORT", "8080")
 }
 
 func getEnv(key, fallback string) string {

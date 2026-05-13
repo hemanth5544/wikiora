@@ -53,7 +53,7 @@ func main() {
 		Origins:    cfg.CORSAllowedOrigins,
 	})
 
-	addr := fmt.Sprintf(":%s", cfg.APIPort)
+	addr := fmt.Sprintf("0.0.0.0:%s", cfg.APIPort)
 	logr.Info("starting api server", "addr", addr)
 	if err := router.Run(addr); err != nil {
 		log.Fatalf("run server: %v", err)
