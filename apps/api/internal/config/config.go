@@ -3,7 +3,9 @@ package config
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type Config struct {
@@ -14,17 +16,45 @@ type Config struct {
 	ClerkSecretKey       string
 	ClerkWebhookSecret   string
 	CORSAllowedOrigins   []string
+	DBMaxOpenConns       int
+	DBMaxIdleConns       int
+	DBConnMaxLifetime    time.Duration
 }
 
 func Load() (*Config, error) {
+	appEnv := getEnv("APP_ENV", "development")
+	maxOpen, maxIdle, lifetime := dbPoolDefaults(appEnv)
+
 	cfg := &Config{
-		AppEnv:             getEnv("APP_ENV", "development"),
-		APIPort:            resolveListenPort(),
-		DatabaseURL:        os.Getenv("DATABASE_URL"),
-		RedisURL:           os.Getenv("REDIS_URL"),
-		ClerkSecretKey:     os.Getenv("CLERK_SECRET_KEY"),
-		ClerkWebhookSecret: os.Getenv("CLERK_WEBHOOK_SIGNING_SECRET"),
-		CORSAllowedOrigins: splitCSV(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:5173")),
+		AppEnv:               appEnv,
+		APIPort:              resolveListenPort(),
+		DatabaseURL:          os.Getenv("DATABASE_URL"),
+		RedisURL:             os.Getenv("REDIS_URL"),
+		ClerkSecretKey:       os.Getenv("CLERK_SECRET_KEY"),
+		ClerkWebhookSecret:   os.Getenv("CLERK_WEBHOOK_SIGNING_SECRET"),
+		CORSAllowedOrigins:   splitCSV(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:5173")),
+		DBMaxOpenConns:       maxOpen,
+		DBMaxIdleConns:       maxIdle,
+		DBConnMaxLifetime:    lifetime,
+	}
+
+	if v := strings.TrimSpace(os.Getenv("DB_MAX_OPEN_CONNS")); v != "" {
+		if n, err := strconv.Atoi(v); err == nil && n > 0 {
+			cfg.DBMaxOpenConns = n
+		}
+	}
+	if v := strings.TrimSpace(os.Getenv("DB_MAX_IDLE_CONNS")); v != "" {
+		if n, err := strconv.Atoi(v); err == nil && n >= 0 {
+			cfg.DBMaxIdleConns = n
+		}
+	}
+	if v := strings.TrimSpace(os.Getenv("DB_CONN_MAX_LIFETIME")); v != "" {
+		if d, err := time.ParseDuration(v); err == nil && d > 0 {
+			cfg.DBConnMaxLifetime = d
+		}
+	}
+	if cfg.DBMaxIdleConns > cfg.DBMaxOpenConns {
+		cfg.DBMaxIdleConns = cfg.DBMaxOpenConns
 	}
 
 	if cfg.DatabaseURL == "" {
@@ -38,6 +68,18 @@ func Load() (*Config, error) {
 	}
 
 	return cfg, nil
+}
+
+// dbPoolDefaults uses a tiny pool when PORT is set (Vercel/serverless) so hosted Postgres
+// is not exhausted. Otherwise development gets a larger pool; production defaults are moderate.
+func dbPoolDefaults(appEnv string) (maxOpen, maxIdle int, lifetime time.Duration) {
+	if strings.TrimSpace(os.Getenv("PORT")) != "" {
+		return 2, 1, 5 * time.Minute
+	}
+	if appEnv == "development" {
+		return 10, 5, 30 * time.Minute
+	}
+	return 10, 5, 15 * time.Minute
 }
 
 // resolveListenPort returns the HTTP listen port.

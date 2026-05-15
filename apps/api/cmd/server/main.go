@@ -26,7 +26,14 @@ func main() {
 	clerk.SetKey(cfg.ClerkSecretKey)
 
 	logr := logger.New(cfg.AppEnv)
-	db, err := postgres.Connect(cfg.DatabaseURL, cfg.AppEnv, logr)
+	db, err := postgres.Connect(
+		cfg.DatabaseURL,
+		cfg.AppEnv,
+		logr,
+		cfg.DBMaxOpenConns,
+		cfg.DBMaxIdleConns,
+		cfg.DBConnMaxLifetime,
+	)
 	if err != nil {
 		log.Fatalf("connect database: %v", err)
 	}
