@@ -189,7 +189,7 @@
   }
 
   .container-app {
-    @apply w-full px-4 md:px-6 lg:pl-10 lg:pr-8 xl:pl-14;
+    @apply w-full px-4 py-0 md:px-6 lg:px-8 xl:px-10;
   }
 
   .section-band {
@@ -210,5 +210,105 @@
 
   .dark .diagonal-stripes {
     --stripe-color: oklch(1 0 0 / 28%);
+  }
+
+  .landing-page {
+    --landing-accent: var(--color-accent-sunset);
+    --landing-glow-color: color-mix(in srgb, var(--landing-accent) 35%, transparent);
+  }
+
+  .landing-nav-pill {
+    @apply mx-auto flex max-w-5xl items-center justify-between gap-3 rounded-full border border-border bg-card/80 px-4 py-2.5 shadow-sm backdrop-blur-md;
+  }
+
+  .landing-glow {
+    pointer-events: none;
+    position: absolute;
+    inset: -20% 10% auto;
+    height: min(70vh, 520px);
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 40%,
+      var(--landing-glow-color),
+      transparent 70%
+    );
+  }
+
+  .landing-bento-card {
+    @apply overflow-hidden rounded-2xl border border-border bg-card;
+    background-image: linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--landing-accent) 8%, var(--canvas-card)),
+      var(--canvas-card) 45%
+    );
+  }
+
+  .landing-cta-band {
+    @apply relative overflow-hidden rounded-t-[2rem] border border-border px-6 py-16 text-center md:px-12 md:py-20;
+    background: linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--landing-accent) 35%, var(--canvas)),
+      color-mix(in srgb, var(--landing-accent) 18%, var(--canvas-soft))
+    );
+    color: var(--ink);
+  }
+
+  .dark .landing-cta-band {
+    background: linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--landing-accent) 88%, #000),
+      color-mix(in srgb, var(--landing-accent) 65%, #1a1a1a)
+    );
+    color: #fff;
+  }
+
+  .landing-cta-band::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    background: repeating-linear-gradient(
+      -32deg,
+      transparent,
+      transparent 12px,
+      rgba(255, 255, 255, 0.15) 12px,
+      rgba(255, 255, 255, 0.15) 13px
+    );
+    pointer-events: none;
+  }
+
+  .landing-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90;
+    background: linear-gradient(
+      135deg,
+      var(--landing-accent),
+      color-mix(in srgb, var(--landing-accent) 70%, #ff9f5a)
+    );
+  }
+
+  .landing-marquee {
+    @apply flex overflow-hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .landing-marquee-track {
+    @apply flex shrink-0 items-center gap-6 py-2;
+    animation: landing-marquee 40s linear infinite;
+  }
+
+  @keyframes landing-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .landing-marquee-track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
   }
 }
