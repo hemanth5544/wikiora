@@ -66,6 +66,43 @@ func (r *QueryRepository) ListAccessibleByUserID(ctx context.Context, userID uui
 	return rows, err
 }
 
+func (r *QueryRepository) ListCreatedByUserID(ctx context.Context, userID uuid.UUID) ([]AccessibleQuery, error) {
+	var rows []AccessibleQuery
+	err := r.db.WithContext(ctx).
+		Table("queries").
+		Select("queries.*, workspaces.name as workspace_name").
+		Joins("JOIN workspaces ON workspaces.id = queries.workspace_id").
+		Joins("JOIN workspace_members ON workspace_members.workspace_id = queries.workspace_id").
+		Where("workspace_members.user_id = ?", userID).
+		Where("queries.author_id = ?", userID).
+		Where("queries.deleted_at IS NULL").
+		Where("workspaces.deleted_at IS NULL").
+		Order("queries.created_at DESC").
+		Scan(&rows).Error
+	return rows, err
+}
+
+func (r *QueryRepository) ListRepliedByUserID(ctx context.Context, userID uuid.UUID) ([]AccessibleQuery, error) {
+	repliedQueryIDs := r.db.WithContext(ctx).
+		Model(&domain.QueryReply{}).
+		Select("DISTINCT query_id").
+		Where("author_id = ?", userID)
+
+	var rows []AccessibleQuery
+	err := r.db.WithContext(ctx).
+		Table("queries").
+		Select("queries.*, workspaces.name as workspace_name").
+		Joins("JOIN workspaces ON workspaces.id = queries.workspace_id").
+		Joins("JOIN workspace_members ON workspace_members.workspace_id = queries.workspace_id").
+		Where("workspace_members.user_id = ?", userID).
+		Where("queries.id IN (?)", repliedQueryIDs).
+		Where("queries.deleted_at IS NULL").
+		Where("workspaces.deleted_at IS NULL").
+		Order("queries.updated_at DESC").
+		Scan(&rows).Error
+	return rows, err
+}
+
 func (r *QueryRepository) Save(ctx context.Context, query *domain.Query) error {
 	return r.db.WithContext(ctx).Save(query).Error
 }

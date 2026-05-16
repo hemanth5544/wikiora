@@ -40,6 +40,7 @@ func NewRouter(deps RouterDeps) *gin.Engine {
 			protected.POST("/users/sync", deps.Users.Sync)
 
 			protected.GET("/queries", deps.Queries.ListFeed)
+			protected.GET("/queries/mine", deps.Queries.ListMine)
 
 			protected.POST("/workspaces", deps.Workspaces.Create)
 			protected.GET("/workspaces", deps.Workspaces.List)

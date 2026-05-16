@@ -128,6 +128,44 @@ func (s *QueryService) ListFeed(ctx context.Context, clerkUserID string) ([]Quer
 	return views, nil
 }
 
+func (s *QueryService) ListMine(ctx context.Context, clerkUserID, scope string) ([]QueryView, error) {
+	user, err := s.users.FindByClerkID(ctx, clerkUserID)
+	if err != nil {
+		return nil, err
+	}
+
+	var queries []repository.AccessibleQuery
+	switch strings.ToLower(strings.TrimSpace(scope)) {
+	case "replied":
+		queries, err = s.queries.ListRepliedByUserID(ctx, user.ID)
+	default:
+		queries, err = s.queries.ListCreatedByUserID(ctx, user.ID)
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	queryIDs := make([]uuid.UUID, 0, len(queries))
+	for _, query := range queries {
+		queryIDs = append(queryIDs, query.ID)
+	}
+	replyCounts, err := s.replies.CountByQueryIDs(ctx, queryIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	views := make([]QueryView, 0, len(queries))
+	for _, query := range queries {
+		view, err := s.toQueryView(ctx, query.WorkspaceID, query.Query, replyCounts[query.ID])
+		if err != nil {
+			return nil, err
+		}
+		view.WorkspaceName = query.WorkspaceName
+		views = append(views, view)
+	}
+	return views, nil
+}
+
 func (s *QueryService) Create(ctx context.Context, clerkUserID string, workspaceID uuid.UUID, input CreateQueryInput) (*QueryView, error) {
 	user, err := s.users.FindByClerkID(ctx, clerkUserID)
 	if err != nil {

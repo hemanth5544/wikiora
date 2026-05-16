@@ -44,6 +44,30 @@ func (h *QueryHandler) ListFeed(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+func (h *QueryHandler) ListMine(c *gin.Context) {
+	clerkUserID, ok := middleware.ClerkUserID(c)
+	if !ok {
+		return
+	}
+
+	scope := c.DefaultQuery("scope", "created")
+	queries, err := h.queries.ListMine(c.Request.Context(), clerkUserID, scope)
+	if errors.Is(err, repository.ErrUserNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": gin.H{"code": "user_not_synced", "message": "user has not been synced yet"}})
+		return
+	}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": gin.H{"code": "internal_error", "message": "failed to list my queries"}})
+		return
+	}
+
+	response := make([]dto.QueryResponse, 0, len(queries))
+	for _, query := range queries {
+		response = append(response, dto.NewQueryResponse(query))
+	}
+	c.JSON(http.StatusOK, response)
+}
+
 func (h *QueryHandler) List(c *gin.Context) {
 	clerkUserID, ok := middleware.ClerkUserID(c)
 	if !ok {
