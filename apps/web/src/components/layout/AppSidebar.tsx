@@ -130,7 +130,7 @@ export function AppSidebar() {
     typeof roleLabel === "string" && roleLabel.length > 0 ? roleLabel.toUpperCase() : "MEMBER"
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-border bg-secondary lg:flex">
+    <aside className="relative hidden h-full w-[280px] shrink-0 flex-col border-r border-border bg-secondary lg:flex">
       <div className="flex h-full min-h-0 flex-col overflow-y-auto px-4 py-5">
         <div className="mb-5 flex items-center gap-3 px-1">
           {user?.imageUrl ? (

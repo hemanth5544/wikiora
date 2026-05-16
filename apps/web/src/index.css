@@ -74,11 +74,16 @@
   }
 
   html {
-    @apply scroll-smooth;
+    @apply h-full scroll-smooth;
+  }
+
+  body,
+  #root {
+    @apply h-full min-h-0;
   }
 
   body {
-    @apply min-h-screen bg-background font-sans text-foreground antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
     font-weight: 400;
     font-feature-settings: "liga" 1, "calt" 1;
   }

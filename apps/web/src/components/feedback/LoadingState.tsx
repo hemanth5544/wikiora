@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 type LoadingStateProps = {
   label?: string
   size?: "sm" | "md" | "lg"
+  layout?: "inline" | "section"
   className?: string
   children?: ReactNode
 }
@@ -15,11 +16,18 @@ type LoadingStateProps = {
 export function LoadingState({
   label = "Loading",
   size = "md",
+  layout = "inline",
   className,
   children,
 }: LoadingStateProps) {
   return (
-    <div className={cn("flex items-center gap-3", className)}>
+    <div
+      className={cn(
+        "flex items-center gap-3",
+        layout === "section" && "justify-center py-16",
+        className,
+      )}
+    >
       <Spinner size={size} label={label} />
       {label ? <p className="type-body-sm text-body">{label}</p> : null}
       {children}
@@ -55,8 +63,8 @@ export function PageContentSkeleton({ withMetrics = false }: { withMetrics?: boo
 
 export function AppShellSkeleton() {
   return (
-    <div className="flex h-screen overflow-hidden bg-background" aria-busy="true" aria-label="Loading app">
-      <aside className="hidden w-64 shrink-0 border-r border-border bg-card/50 p-4 lg:block" aria-hidden>
+    <div className="flex h-dvh min-h-0 overflow-hidden bg-background" aria-busy="true" aria-label="Loading app">
+      <aside className="hidden h-full w-64 shrink-0 border-r border-border bg-card/50 p-4 lg:block" aria-hidden>
         <Skeleton className="mb-8 h-8 w-28 rounded-full" />
         <div className="space-y-2">
           {Array.from({ length: 6 }, (_, i) => (
