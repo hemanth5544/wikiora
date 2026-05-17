@@ -36,15 +36,14 @@ func Connect(
 	sqlDB.SetMaxIdleConns(maxIdleConns)
 	sqlDB.SetConnMaxLifetime(connMaxLifetime)
 
-	if AutoMigrateEnabled(appEnv) {
+	if AutoMigrateEnabled() {
 		if err := migrate(db, log); err != nil {
 			return nil, err
 		}
 	} else {
 		log.Info(
 			"skipping auto migrate on startup",
-			"app_env", appEnv,
-			"hint", "run migrations with: cd apps/api && go run ./cmd/migrate",
+			"hint", "set DB_AUTO_MIGRATE=true locally, or run: cd apps/api && go run ./cmd/migrate",
 		)
 	}
 

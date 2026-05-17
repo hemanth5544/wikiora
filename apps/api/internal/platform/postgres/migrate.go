@@ -10,20 +10,16 @@ import (
 	"gorm.io/gorm"
 )
 
-// AutoMigrateEnabled reports whether Connect should run GORM AutoMigrate.
-// Hosted/serverless deploys (Vercel) must skip startup migrations — each cold start
-// would run hundreds of slow catalog queries against remote Postgres.
-func AutoMigrateEnabled(appEnv string) bool {
+// AutoMigrateEnabled reports whether Connect should run GORM AutoMigrate on startup.
+// Migrations are opt-in only (DB_AUTO_MIGRATE=true) so serverless hosts like Vercel never
+// run hundreds of slow catalog queries before the process can listen on PORT.
+func AutoMigrateEnabled() bool {
 	switch strings.ToLower(strings.TrimSpace(os.Getenv("DB_AUTO_MIGRATE"))) {
 	case "1", "true", "yes":
 		return true
-	case "0", "false", "no":
+	default:
 		return false
 	}
-	if os.Getenv("VERCEL") == "1" || strings.TrimSpace(os.Getenv("VERCEL_ENV")) != "" {
-		return false
-	}
-	return appEnv == "development"
 }
 
 func Migrate(db *gorm.DB) error {
