@@ -5,7 +5,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/wikiora/wikiora/apps/api/internal/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -37,15 +36,16 @@ func Connect(
 	sqlDB.SetMaxIdleConns(maxIdleConns)
 	sqlDB.SetConnMaxLifetime(connMaxLifetime)
 
-	if err := db.AutoMigrate(
-		&domain.User{},
-		&domain.Workspace{},
-		&domain.WorkspaceMember{},
-		&domain.WorkspaceInvite{},
-		&domain.Query{},
-		&domain.QueryReply{},
-	); err != nil {
-		return nil, fmt.Errorf("auto migrate: %w", err)
+	if AutoMigrateEnabled(appEnv) {
+		if err := migrate(db, log); err != nil {
+			return nil, err
+		}
+	} else {
+		log.Info(
+			"skipping auto migrate on startup",
+			"app_env", appEnv,
+			"hint", "run migrations with: cd apps/api && go run ./cmd/migrate",
+		)
 	}
 
 	log.Info("database connected", "max_open", maxOpenConns, "max_idle", maxIdleConns)
